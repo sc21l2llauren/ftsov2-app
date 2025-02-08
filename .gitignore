@@ -7,4 +7,5 @@ out
 broadcast
 
 data
-node_modules
+
+node_modules/
