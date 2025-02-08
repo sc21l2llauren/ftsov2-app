@@ -5,7 +5,7 @@ src = "src"
 out = "out"
 libs = ["dependencies"]
 fs_permissions = [{ access = "read-write", path = "./" }]
-
+via_ir = true
 
 [dependencies]
 forge-std = "1.9.5"
