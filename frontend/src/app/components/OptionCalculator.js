@@ -7,6 +7,7 @@ import { useState } from "react";
 
 export default function OptionCalculator({ spotPrice, selectedCrypto }) {
     const [strikePrice, setStrikePrice] = useState("");
+    const [optionType, setOptionType] = useState("");
     const [volatility, setVolatility] = useState("");
     const [riskFreeRate, setRiskFreeRate] = useState("");
     const [daysUntilExpiration, setDaysUntilExpiration] = useState("");
@@ -33,6 +34,19 @@ export default function OptionCalculator({ spotPrice, selectedCrypto }) {
           value={strikePrice}
           onChange={(e) => setStrikePrice(e.target.value)}
         />
+      </div>
+
+      {/* Option Type (Put/Call) */}
+      <div className="flex flex-col">
+        <label className="text-gray-600">Option Type</label>
+        <select
+          className="border border-gray-300 rounded-lg p-2 text-gray-500"
+          value={optionType}
+          onChange={(e) => setOptionType(e.target.value)}
+        >
+          <option value="call">Call</option>
+          <option value="put">Put</option>
+        </select>
       </div>
 
       {/* Volatility Input */}
