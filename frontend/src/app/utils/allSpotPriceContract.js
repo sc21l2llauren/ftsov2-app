@@ -33,7 +33,7 @@ export async function main() {
 
     for (const feed of FEED_IDS) {
       const price = await getPrice(provider, ftsov2, feed);
-      console.log(`Fetched price for feed ${feed}:`, price);
+      //console.log(`Fetched price for feed ${feed}:`, price);
       prices.push(price);
     }
 

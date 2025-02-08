@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import PriceFetcher from "./components/PriceFetcher";
 import OptionCalculator from "./components/OptionCalculator";
-import { fetchFlrUsdPrice } from "./utils/flareSpotPriceContract";
 import { main } from "./utils/allSpotPriceContract";
 
 
@@ -17,7 +16,7 @@ export default function Home() {
     setLoading(true);
     try {
       const fetchedPrices = await main(); // Fetch all prices
-      console.log("Fetched Prices:", fetchedPrices); // Debugging output
+      //console.log("Fetched Prices:", fetchedPrices); // Debugging output
   
       if (!fetchedPrices || !Array.isArray(fetchedPrices)) {
         console.error("Error: main() did not return an array of prices.");
@@ -56,7 +55,7 @@ export default function Home() {
         setSelectedCrypto={setSelectedCrypto} 
       />
       
-      <OptionCalculator spotPrice={price} />
+      <OptionCalculator spotPrice={price} selectedCrypto={selectedCrypto}  />
     </div>
   );
 }
