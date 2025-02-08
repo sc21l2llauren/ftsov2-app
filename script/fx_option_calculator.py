@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Load environment variables (RPC URL and Private Key)
 load_dotenv()
 RPC_URL = os.getenv("RPC_URL")
-PRIVATE_KEY = os.getenv("PRIVATE_KEY")
+PRIVATE_KEY = os.getenv("ACCOUNT_PRIVATE_KEY")
 
 # Initialize Web3
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
