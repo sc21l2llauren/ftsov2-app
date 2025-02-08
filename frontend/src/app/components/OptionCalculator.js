@@ -5,7 +5,7 @@
 import { useState } from "react";
 
 
-export default function OptionCalculator({ spotPrice }) {
+export default function OptionCalculator({ spotPrice, selectedCrypto }) {
     const [strikePrice, setStrikePrice] = useState("");
     const [volatility, setVolatility] = useState("");
     const [riskFreeRate, setRiskFreeRate] = useState("");
@@ -17,7 +17,7 @@ export default function OptionCalculator({ spotPrice }) {
   
         {/* Spot Price (Fetched) */}
       <div className="flex flex-col">
-        <label className="text-gray-600">Spot Price (FLR/USD)</label>
+        <label className="text-gray-600">Spot Price ({selectedCrypto}/USD)</label>
         <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
           {spotPrice ? `$${spotPrice}` : "Loading..."}
         </p>

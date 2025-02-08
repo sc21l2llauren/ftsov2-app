@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import { Web3 } from "web3";
+
 
 // Replace with Flare RPC Endpoint
 const FLARE_RPC_URL = "https://coston2-api.flare.network/ext/C/rpc"; 
