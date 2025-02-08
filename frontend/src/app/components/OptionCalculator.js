@@ -70,8 +70,6 @@ export default function OptionCalculator({ spotPrice }) {
           onChange={(e) => setDaysUntilExpiration(e.target.value)}
         />
       </div>
-
-        Calculate Button
       <button
         className="w-full bg-pink-600 text-white py-2 px-4 rounded-lg mt-4 hover:bg-pink-700 transition-colors"
       >
