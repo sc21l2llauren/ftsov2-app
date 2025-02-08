@@ -31,7 +31,10 @@ remappings_location = "txt"
 recursive_deps = true
 
 [etherscan]
-coston = { key = "X", chain = 16, url = "${COSTON_RPC_URL}" }
-coston2 = { key = "X", chain = 16, url = "${COSTON2_RPC_URL}" }
+# coston = { key = "X", chain = 16, url = "${COSTON_RPC_URL}" }
+coston = { key = "X", chain = 16, url = "https://coston2-api.flare.network/ext/bc/C/rpc" }
 songbird = { key = "X", chain = 16, url = "${SONGBIRD_RPC_URL}" }
 flare = { key = "X", chain = 16, url = "${FLARE_RPC_URL}" }
+
+[rpc_endpoints]
+coston = "https://coston2-api.flare.network/ext/bc/C/rpc"
