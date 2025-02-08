@@ -1,9 +1,6 @@
+@flarenetwork/flare-periphery-contracts/=node_modules/@flarenetwork/flare-periphery-contracts/
 @openzeppelin-contracts/=dependencies/@openzeppelin-contracts-5.2.0-rc.1/
+@openzeppelin/contracts/=node_modules/@openzeppelin/contracts
 flare-periphery/=dependencies/flare-periphery-0.0.1/
 forge-std/=dependencies/forge-std-1.9.5/src/
-forge-std/=dependencies/forge-std-1.9.5/
 surl/=dependencies/surl-0.0.0/src/
-
-surl/=dependencies/surl-0.0.0/
-@flarenetwork/flare-periphery-contracts/=node_modules/@flarenetwork/flare-periphery-contracts/
-@openzeppelin/contracts/=node_modules/@openzeppelin/contracts
