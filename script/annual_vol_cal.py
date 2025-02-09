@@ -13,6 +13,9 @@ KRAKEN_API_URL = "https://api.kraken.com/0/public/OHLC"
 # Cryptocurrency IDs for CoinGecko
 COINGECKO_CRYPTO_IDS = {"BTC": "bitcoin", "ETH": "ethereum"}
 
+# Default values for volatility if API calls fail
+DEFAULT_VOLATILITIES = {"BTC/USD": 0.4297, "ETH/USD": 0.5421, "FLR/USD": 0.7774}
+
 # Dictionary to store annualized volatility values
 volatility_dict = {}
 
@@ -53,7 +56,9 @@ def analyze_volatility(price_data, crypto_name):
     df = pd.DataFrame(price_data)
     
     if df.empty:
-        raise ValueError(f"No historical data retrieved for {crypto_name}.")
+        print(f"Using default volatility for {crypto_name}/USD: {DEFAULT_VOLATILITIES[crypto_name+'/USD']}")
+        volatility_dict[f"{crypto_name}/USD"] = DEFAULT_VOLATILITIES[f"{crypto_name}/USD"]
+        return
     
     df["returns"] = np.log(df["price"] / df["price"].shift(1))
     df = df.dropna()  # Remove NaN values from returns
@@ -70,23 +75,23 @@ def analyze_volatility(price_data, crypto_name):
     print(f"{crypto_name}/USD Annualized Volatility: {annual_volatility:.4f}")
 
     # Plot price data
-    #plt.figure(figsize=(12, 5))
-    #plt.subplot(1, 2, 1)
-    #plt.plot(df["timestamp"], df["price"], linestyle="-", label=f"{crypto_name}/USD Price")
-    #plt.xlabel("Time")
-    #plt.ylabel("Price (USD)")
-    #plt.title(f"{crypto_name}/USD Price over Time")
-    #plt.legend()
+#    plt.figure(figsize=(12, 5))
+#    plt.subplot(1, 2, 1)
+#    plt.plot(df["timestamp"], df["price"], linestyle="-", label=f"{crypto_name}/USD Price")
+#    plt.xlabel("Time")
+#    plt.ylabel("Price (USD)")
+#    plt.title(f"{crypto_name}/USD Price over Time")
+#    plt.legend()
 
     # Plot returns data
-    #plt.subplot(1, 2, 2)
-    #plt.plot(df["timestamp"], df["returns"], linestyle="-", label="Log Returns")
-    #plt.xlabel("Time")
-    #plt.ylabel("Returns")
-    #plt.title(f"{crypto_name}/USD Log Returns over Time")
-    #plt.legend()
+#    plt.subplot(1, 2, 2)
+#    plt.plot(df["timestamp"], df["returns"], linestyle="-", label="Log Returns")
+#    plt.xlabel("Time")
+#    plt.ylabel("Returns")
+#    plt.title(f"{crypto_name}/USD Log Returns over Time")
+#    plt.legend()
 
-    #plt.show()
+#    plt.show()
 
 def main():
     for symbol, crypto_id in COINGECKO_CRYPTO_IDS.items():
