@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import getVolatility from "../utils/getVolatility";
 
 export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [strikePrice, setStrikePrice] = useState("");
@@ -24,6 +25,41 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    async function fetchVolatility() {
+        try {
+            const volatilityData = await getVolatility(); // Fetch all data
+
+            if (volatilityData && selectedCrypto) {
+                const key = `${selectedCrypto}/USD`; // Construct key
+                const selectedVolatility = volatilityData[key];
+
+                if (selectedVolatility !== undefined) {
+                    const formattedVolatility = (parseFloat(selectedVolatility) * 100).toFixed(2);
+                    console.log(`Volatility for ${selectedCrypto}: ${formattedVolatility}%`);
+                    setVolatility(formattedVolatility);
+                } else {
+                    console.warn(`No data found for ${selectedCrypto}`);
+                    setVolatility(null);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching volatility:", error);
+            setVolatility(null);
+        }
+    }
+
+    // Run initially
+    fetchVolatility();
+
+    // Refresh every 5 seconds
+    const interval = setInterval(fetchVolatility, 5000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+}, [selectedCrypto]); // Re-run if `selectedCrypto` changes
+
+
 
   useEffect(() => {
     // Reset the values whenever `selectedCrypto` changes
@@ -155,13 +191,9 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         {/* Volatility */}
         <div className="flex flex-col w-1/2">
           <label className="text-gray-600">Volatility (%)</label>
-          <input
-            type="number"
-            className="border border-gray-300 rounded-lg p-2 text-gray-500"
-            value={volatility}
-            onChange={(e) => setVolatility(e.target.value)}
-            min={0.01}
-          />
+          <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
+          {spotPrice ? `${volatility}` : "Loading..."}
+        </p>
         </div>
 
         {/* Risk-Free Rate */}

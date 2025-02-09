@@ -1,7 +1,7 @@
 import requests
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 # CoinGecko API base URL (for BTC/USD & ETH/USD)

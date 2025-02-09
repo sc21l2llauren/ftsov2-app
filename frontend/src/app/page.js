@@ -5,6 +5,7 @@ import PriceFetcher from "./components/PriceFetcher";
 import OptionCalculator from "./components/OptionCalculator";
 import { main } from "./utils/allSpotPriceContract";
 import OptionResult from "./components/OptionResult.js";
+import getVolatility from "./utils/getVolatility";
 
 
 export default function Home() {
