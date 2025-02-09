@@ -23,7 +23,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     
     const requestData = {
         S0: parseFloat(spotPrice),  // Ensure numerical values are correctly formatted
-        amountCrypto: parseFloat(amountCrypto),
+        //amountCrypto: parseFloat(amountCrypto),
         K: parseFloat(strikePrice),
         rd: parseFloat(domesticRiskFreeRate/100),
         rf: parseFloat(riskFreeRate/100),
@@ -45,17 +45,9 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       });
 
       const data = await response.json();
-        console.log("Response Data:", data); // Debugging output
-    //     const formattedPremium = new Intl.NumberFormat("en-US", {
-    //         style: "currency",
-    //         currency: "USD"
-    //       }).format(data.premium);
-          
-    //       console.log("Option Premium:", formattedPremium);
-    //   setOptionPremium(formattedPremium);
 
     const premium = parseFloat(data.premium); // Ensure it's a number
-
+    console.log("Received json:", data);
     if (isNaN(premium)) {
         throw new Error("Invalid premium value received.");
     }

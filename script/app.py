@@ -102,6 +102,7 @@ def calculate_premium():
 
         # Calculate the option premium
         premium = calculate_option_premium(S0, K, T, rd, rf, sigma, option_type)
+        print('premium is ', premium)
         if premium is None:
             return jsonify({"error": "Failed to calculate option premium"}), 500
 
