@@ -12,7 +12,7 @@ CORS(app)
 def get_premium():
     """ API endpoint to get option premium data """
     try:
-        print((request.args), 'hellooooooo')
+       
 
         S0 = float(request.args.get("S0", 0))
         K = float(request.args.get("K", 0))
@@ -47,8 +47,8 @@ def calculate_premium():
         S0 = float(data["S0"])
         K = float(data["K"])
         T = float(data["T"])
-        rd = float(data["rd"])
-        rf = float(data["rf"])
+        rd = 0.0283 #float(data["rd"])
+        rf = 0 #float(data["rf"])
         sigma = float(data["sigma"])
         option_type = data.get("option_type", "call")  # Default to "call"
         amountOfCrypto = float(data["amountCrypto"])
