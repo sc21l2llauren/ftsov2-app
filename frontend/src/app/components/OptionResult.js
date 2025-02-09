@@ -266,33 +266,8 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           </p>
         </div>
 
-        {/* Risk-Free Rate */}
-        <div className="flex flex-col w-1/2">
-          <label className="text-gray-600">Risk-Free Rate (%)</label>
-          <input
-            type="number"
-            className="border border-gray-300 rounded-lg p-2 text-gray-500"
-            value={riskFreeRate}
-            onChange={(e) => setRiskFreeRate(e.target.value)}
-            min={0.01}
-          />
-        </div>
-      </div>
-
-      {/* Domestic Risk-Free Rate */}
-      <div className="flex flex-col">
-        <label className="text-gray-600">Domestic Risk-Free Rate (%)</label>
-        <input
-          type="number"
-          className="border border-gray-300 rounded-lg p-2 text-gray-500"
-          value={domesticRiskFreeRate}
-          onChange={(e) => setDomesticRiskFreeRate(e.target.value)}
-          min={0.01}
-        />
-      </div>
-
       {/* Days Until Expiration */}
-      <div className="flex flex-col">
+      <div className="flex flex-col w-1/2">
         <label className="text-gray-600">Days Until Expiration</label>
         <input
           type="number"
@@ -301,8 +276,9 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           onChange={(e) => setDaysUntilExpiration(e.target.value)}
           min={1}
         />
+        </div>
       </div>
-
+      
       {/* Premium */}
       <div className="flex flex-col">
         <label className="text-gray-600">Premium</label>
