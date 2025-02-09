@@ -35,6 +35,13 @@ contract FXOptionPremiumStorage {
         owner = msg.sender;
     }
     
+    // Modifier to check if the user has enough balance for the trade
+    modifier hasSufficientFunds(uint256 requiredAmount) {
+        require(msg.sender.balance >= requiredAmount, "Insufficient funds for the transaction.");
+        _;
+    }
+
+    // Updated function to include the balance check
     function storeOptionPremium(
         uint256 spotPrice,
         uint256 strikePrice,
@@ -44,7 +51,7 @@ contract FXOptionPremiumStorage {
         uint256 volatility,
         uint256 premium,
         uint256 cryptoAmount // Added parameter for cryptoAmount
-    ) public {
+    ) public hasSufficientFunds(premium) {
         OptionPremium memory newPremium = OptionPremium({
             user: msg.sender,
             spotPrice: spotPrice,

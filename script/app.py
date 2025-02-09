@@ -16,7 +16,7 @@ CORS(app)
 load_dotenv()
 RPC_URL = os.getenv("RPC_URL")
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
-CONTRACT_ADDRESS = "0xf8Be4dcdB62F9546A370720939a2829B25DB1100"
+CONTRACT_ADDRESS = "0xF07afA6C0b1eDa1486257e8214cB757f3e06b697"
 
 # Check if environment variables are properly loaded
 if not RPC_URL or not PRIVATE_KEY:

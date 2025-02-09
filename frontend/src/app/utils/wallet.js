@@ -19,14 +19,21 @@ export async function connectWallet() {
     }
 }
 
-export async function checkBalance(requiredAmount) {
+export async function checkBalance(requiredAmount, flarePrice) {
     const wallet = await connectWallet();
     if (!wallet) return false;
 
     const balance = await wallet.provider.getBalance(wallet.address);
-    const balanceInEth = ethers.formatEther(balance);
 
-    console.log(`Wallet Balance: ${balanceInEth} ETH`);
+    const formattedBalance = ethers.formatEther(balance); // Result is a string
+    const balanceInEther = parseFloat(formattedBalance); // Format to 2 decimal places
+    console.log("Wallet Balance:", balanceInEther);
+
+
+    let requireFLR = requiredAmount / flarePrice
+    console.log(requireFLR, 'required flare coins')
     
-    return parseFloat(balanceInEth) >= requiredAmount;
+    
+    return balanceInEther >= requireFLR;
 }
+

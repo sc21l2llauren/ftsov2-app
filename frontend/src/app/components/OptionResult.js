@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import getVolatility from "../utils/getVolatility";
+import { checkBalance } from "../utils/wallet";
 
 export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [strikePrice, setStrikePrice] = useState("");
@@ -111,18 +112,32 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       if (isNaN(premium)) {
         throw new Error("Invalid premium value received.");
       }
+
+
       
       // If rounding to 2 decimal places results in 0.00, use 20 decimal places
       const formattedPremium = premium.toFixed(2) === "0.00" ? premium.toFixed(6) : premium.toFixed(2);
       
+
+
       console.log("Formatted Premium:", formattedPremium);
-      setOptionPremium(formattedPremium);
+      setOptionPremium(premium);
+
+        // Check if wallet has enough balance
+        console.log(await checkBalance(premium, spotPrice), "check balance");
+
+        if (!(await checkBalance(premium, spotPrice))) {
+            throw new Error("Insufficient funds. Please top up your wallet.");
+        }
+        else{
+            setModalMessage(`Option Premium: $${formattedPremium} \nTransaction Hashss: ${data.transaction_hash}`);
+            setTransactionHash(data.transaction_hash);
+            setIsSuccess(true);
+            setShowModal(true);
+        }
 
       // Show success modal with premium and hash
-      setModalMessage(`Option Premium: $${formattedPremium} \nTransaction Hashss: ${data.transaction_hash}`);
-      setTransactionHash(data.transaction_hash);
-      setIsSuccess(true);
-      setShowModal(true);
+      
     } catch (error) {
       console.error("Error calculating option price:", error);
 
@@ -191,9 +206,16 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         {/* Volatility */}
         <div className="flex flex-col w-1/2">
           <label className="text-gray-600">Volatility (%)</label>
-          <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
+          {/* <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
           {spotPrice ? `${volatility}` : "Loading..."}
-        </p>
+        </p> */}
+        <input
+            type="number"
+            className="border border-gray-300 rounded-lg p-2 text-gray-500"
+            value={volatility}
+            onChange={(e) => setVolatility(e.target.value)}
+            min={0.01}
+          />
         </div>
 
         {/* Risk-Free Rate */}
@@ -240,13 +262,6 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       >
         {loading ? "Calculating..." : "Calculate Option Price"}
       </button>
-
-      {/* Display Premium */}
-      {optionPremium !== null && (
-        <div className="text-lg text-green-600 font-semibold mt-4">
-          Option Premium: ${optionPremium}
-        </div>
-      )}
 
       {/* Modal */}
       {showModal && (
