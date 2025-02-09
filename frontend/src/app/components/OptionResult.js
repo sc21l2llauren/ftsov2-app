@@ -12,6 +12,18 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [optionPremium, setOptionPremium] = useState(null);
   const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState("");
   const [loading, setLoading] = useState(false);
+  const [transaction_hash, setTransactionHash] = useState(false);
+
+  // Modal States
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+   let data = 0;
+
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   useEffect(() => {
     // Reset the values whenever `selectedCrypto` changes
@@ -24,6 +36,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     setOptionPremium(null);
     setDomesticRiskFreeRate("");
     setLoading(false);
+    setShowModal(false);
   }, [selectedCrypto]); // Trigger when selectedCrypto changes
 
   const handleCalculate = async () => {
@@ -35,19 +48,17 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     setLoading(true);
     
     const requestData = {
-        S0: parseFloat(spotPrice),  // Ensure numerical values are correctly formatted
-        amountCrypto: parseFloat(amountCrypto),
-        K: parseFloat(strikePrice),
-        rd: parseFloat(domesticRiskFreeRate/100),
-        rf: parseFloat(riskFreeRate/100),
-        sigma: parseFloat(volatility/100),
-        T: parseFloat(daysUntilExpiration),
-        option_type: optionType || "call" // Default to "call" if undefined
+      S0: parseFloat(spotPrice),  // Ensure numerical values are correctly formatted
+      amountCrypto: parseFloat(amountCrypto),
+      K: parseFloat(strikePrice),
+      rd: parseFloat(domesticRiskFreeRate/100),
+      rf: parseFloat(riskFreeRate/100),
+      sigma: parseFloat(volatility/100),
+      T: parseFloat(daysUntilExpiration),
+      option_type: optionType || "call" // Default to "call" if undefined
     };
 
     try {
-      console.log("Request Data:", requestData); // Debugging output
-
       const response = await fetch("http://127.0.0.1:5000/calculate-premium", {
         method: "POST",
         headers: {
@@ -56,10 +67,11 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         body: JSON.stringify(requestData),
       });
 
-      const data = await response.json();
+    data = await response.json();
 
       const premium = parseFloat(data.premium); // Ensure it's a number
       console.log("Received json:", data);
+
       if (isNaN(premium)) {
         throw new Error("Invalid premium value received.");
       }
@@ -69,8 +81,19 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       
       console.log("Formatted Premium:", formattedPremium);
       setOptionPremium(formattedPremium);
+
+      // Show success modal with premium and hash
+      setModalMessage(`Option Premium: $${formattedPremium} \nTransaction Hashss: ${data.transaction_hash}`);
+      setTransactionHash(data.transaction_hash);
+      setIsSuccess(true);
+      setShowModal(true);
     } catch (error) {
       console.error("Error calculating option price:", error);
+
+      // Show failure modal with error message
+      setModalMessage(`Error: ${error.message || "Something went wrong. Please try again."}`);
+      setIsSuccess(false);
+      setShowModal(true);
     }
 
     setLoading(false);
@@ -78,7 +101,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl space-y-4 w-full max-w-md">
-      <h2 className="text-xl font-bold text-pink-700 mb-4">Options Calculator</h2>
+      <h2 className="text-xl font-bold text-pink-700 mb-4 text-center">Options Calculator</h2>
 
       {/* Spot Price */}
       <div className="flex flex-col">
@@ -99,30 +122,32 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           min={0.000000000000000000000000000000000000001}
         />
       </div>
+      
+      <div className="flex space-x-4">
+        {/* Number of (Crypto) */}
+        <div className="flex flex-col w-1/2">
+            <label className="text-gray-600">Number of ({selectedCrypto})</label>
+            <input
+            type="number"
+            className="border border-gray-300 rounded-lg p-2 text-gray-500"
+            value={amountCrypto}
+            onChange={(e) => setAmountCrypto(e.target.value)}
+            min={0.000001}
+            />
+        </div>
 
-      {/* Number of (Crypto) */}
-      <div className="flex flex-col">
-        <label className="text-gray-600">Number of ({selectedCrypto})</label>
-        <input
-          type="number"
-          className="border border-gray-300 rounded-lg p-2 text-gray-500"
-          value={amountCrypto}
-          onChange={(e) => setAmountCrypto(e.target.value)}
-          min={0.000001}
-        />
-      </div>
-
-      {/* Option Type */}
-      <div className="flex flex-col">
-        <label className="text-gray-600">Option Type</label>
-        <select
-          className="border border-gray-300 rounded-lg p-2 text-gray-500"
-          value={optionType}
-          onChange={(e) => setOptionType(e.target.value)}
-        >
-          <option value="call">Call</option>
-          <option value="put">Put</option>
-        </select>
+        {/* Option Type */}
+        <div className="flex flex-col w-1/2">
+            <label className="text-gray-600">Option Type</label>
+            <select
+            className="border border-gray-300 rounded-lg p-2 text-gray-500"
+            value={optionType}
+            onChange={(e) => setOptionType(e.target.value)}
+            >
+            <option value="call">Call</option>
+            <option value="put">Put</option>
+            </select>
+        </div>
       </div>
 
       {/* Volatility and Risk-Free Rate (Percentage Inputs in Same Row) */}
@@ -190,6 +215,47 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           Option Premium: ${optionPremium}
         </div>
       )}
+
+      {/* Modal */}
+      {showModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-xl text-center">
+      {/* Success/Error Title */}
+      <div className={`text-2xl font-bold mb-4 ${isSuccess ? "text-green-600" : "text-red-600"}`}>
+        {isSuccess ? "Success!" : "Error!"}
+      </div>
+
+      {/* Option Premium and Transaction Hash */}
+      <div className="text-lg mb-4">
+        {isSuccess ? (
+          <div className="text-xl font-semibold text-gray-800">
+            Option Premium: <span className="text-blue-600">${optionPremium}</span>
+          </div>
+        ) : (
+          <div className="text-lg text-red-600">
+            {modalMessage}
+          </div>
+        )}
+      </div>
+
+      {/* Transaction Hash */}
+      {isSuccess && (
+        <div className="text-sm text-gray-500 mt-2">
+            <span className="font-semibold">Transaction Hash:</span>
+            <div className="text-gray-600 mt-1 break-words">{transaction_hash}</div>
+            </div>
+        )}
+
+      {/* Close Button */}
+      <button
+        className="mt-6 bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors"
+        onClick={() => closeModal()}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 }
