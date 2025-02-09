@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [strikePrice, setStrikePrice] = useState("");
@@ -10,8 +10,21 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [riskFreeRate, setRiskFreeRate] = useState("");
   const [daysUntilExpiration, setDaysUntilExpiration] = useState("");
   const [optionPremium, setOptionPremium] = useState(null);
-  const [domesticRiskFreeRate, setdomesticRiskFreeRate] = useState("");
+  const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Reset the values whenever `selectedCrypto` changes
+    setStrikePrice("");
+    setAmountCrypto("");
+    setOptionType("call");
+    setVolatility("");
+    setRiskFreeRate("");
+    setDaysUntilExpiration("");
+    setOptionPremium(null);
+    setDomesticRiskFreeRate("");
+    setLoading(false);
+  }, [selectedCrypto]); // Trigger when selectedCrypto changes
 
   const handleCalculate = async () => {
     if (!strikePrice || !volatility || !riskFreeRate || !daysUntilExpiration) {
@@ -140,7 +153,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
                 type="number"
                 className="border border-gray-300 rounded-lg p-2 text-gray-500"
                 value={domesticRiskFreeRate}
-                onChange={(e) => setdomesticRiskFreeRate(e.target.value)}
+                onChange={(e) => setDomesticRiskFreeRate(e.target.value)}
             />
         </div>
 
