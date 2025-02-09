@@ -11,7 +11,7 @@ import numpy as np
 load_dotenv()
 RPC_URL = os.getenv("RPC_URL")
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
-CONTRACT_ADDRESS = "0xF07afA6C0b1eDa1486257e8214cB757f3e06b697"
+CONTRACT_ADDRESS = "0xf27d41fc5d4f36F65De4E737A487B44A8a221FA7"
 
 # Check if environment variables are properly loaded
 if not RPC_URL or not PRIVATE_KEY:

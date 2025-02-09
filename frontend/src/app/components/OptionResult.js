@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import getVolatility from "../utils/getVolatility";
-import { checkBalance } from "../utils/wallet";
+import { checkBalance, sendFLRToContract } from "../utils/wallet";
 
 export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [strikePrice, setStrikePrice] = useState("");
@@ -15,6 +15,8 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState(0.0283);
   const [loading, setLoading] = useState(false);
   const [transaction_hash, setTransactionHash] = useState(false);
+  const [savedPremium, setSavedPremium] = useState(null);
+
 
   // Modal States
   const [showModal, setShowModal] = useState(false);
@@ -117,7 +119,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       
       // If rounding to 2 decimal places results in 0.00, use 20 decimal places
       const formattedPremium = premium.toFixed(2) === "0.00" ? premium.toFixed(6) : premium.toFixed(2);
-      
+      setSavedPremium(formattedPremium);
 
 
       console.log("Formatted Premium:", formattedPremium);
@@ -130,6 +132,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
             throw new Error("Insufficient funds. Please top up your wallet.");
         }
         else{
+            sendFLRToContract(premium);
             setModalMessage(`Option Premium: $${formattedPremium} \nTransaction Hashss: ${data.transaction_hash}`);
             setTransactionHash(data.transaction_hash);
             setIsSuccess(true);
@@ -307,7 +310,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       <div className="text-lg mb-4">
         {isSuccess ? (
           <div className="text-xl font-semibold text-gray-800">
-            Option Premium: <span className="text-blue-600">${optionPremium}</span>
+            Option Premium: <span className="text-blue-600">${savedPremium}</span>
           </div>
         ) : (
           <div className="text-lg font-semibold text-red-600 bg-red-100 border border-red-400 p-3 rounded-lg">

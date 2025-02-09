@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+const CONTRACT_ADDRESS = "0xf27d41fc5d4f36F65De4E737A487B44A8a221FA7";
 
 export async function connectWallet() {
     if (!window.ethereum) {
@@ -36,4 +37,24 @@ export async function checkBalance(requiredAmount, flarePrice) {
     
     return balanceInEther >= requireFLR;
 }
+
+export async function sendFLRToContract(amount) {
+  
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner(); // Get user's wallet
+    const formattedAmount = amount.toFixed(18); // Prevent scientific notation
+    console.log("Sending FLR to contract:", formattedAmount);
+    try {
+      const tx = await signer.sendTransaction({
+        to: CONTRACT_ADDRESS,
+        value: ethers.parseEther(formattedAmount), // Convert FLR to Wei
+      });
+  
+      console.log("Transaction sent! Hash:", tx.hash);
+      await tx.wait();
+      console.log("Transaction confirmed!");
+    } catch (error) {
+      console.error("Error sending FLR:", error);
+    }
+  }
 
