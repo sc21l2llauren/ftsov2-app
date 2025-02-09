@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import PriceFetcher from "./components/PriceFetcher";
 import OptionCalculator from "./components/OptionCalculator";
 import { main } from "./utils/allSpotPriceContract";
+import OptionResult from "./components/OptionResult.js";
+import getVolatility from "./utils/getVolatility";
+import WalletConnectButton from "./components/WalletConnectButton";
 
 
 export default function Home() {
@@ -46,8 +49,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">
-      <h1 className="text-4xl font-extrabold text-white mb-8 sm:text-5xl md:text-6xl lg:text-7xl">Flare Network Price Tracker</h1>
-      
+      <h1 className="text-4xl font-extrabold text-white mb-8 sm:text-5xl md:text-6xl lg:text-7xl">Opt-Chain Pricing</h1>
+      {/* <WalletConnectButton /> */}
+
       <PriceFetcher 
         price={price} 
         loadPrice={loadPrice} 
@@ -55,7 +59,7 @@ export default function Home() {
         setSelectedCrypto={setSelectedCrypto} 
       />
       
-      <OptionCalculator spotPrice={price} selectedCrypto={selectedCrypto}  />
+      <OptionResult spotPrice={price} selectedCrypto={selectedCrypto}  />
     </div>
   );
 }
