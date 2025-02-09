@@ -1,6 +1,6 @@
 export default async function getVolatility() {
     try {
-        const response = await fetch("http://127.0.0.1:5000/get_volatility", {
+        const response = await fetch("https://opt-chain.onrender.com/get_volatility", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

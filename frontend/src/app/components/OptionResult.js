@@ -98,7 +98,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/publish-premium", {
+      const response = await fetch("https://opt-chain.onrender.com/publish-premium", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
 
     // Send a GET request with query parameters
     try {
-      const response = await fetch(`http://127.0.0.1:5000/get-premium?${queryString}`, {
+      const response = await fetch(`https://opt-chain.onrender.com/get-premium?${queryString}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
