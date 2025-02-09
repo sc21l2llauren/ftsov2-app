@@ -12,6 +12,7 @@ contract FXOptionPremiumStorage {
         uint256 volatility;
         uint256 premium;
         uint256 timestamp;
+        uint256 cryptoAmount; // The amount of cryptocurrency (e.g., BTC, ETH) involved in the option
     }
     
     address public owner;
@@ -26,7 +27,8 @@ contract FXOptionPremiumStorage {
         uint256 foreignRate,
         uint256 volatility,
         uint256 premium,
-        uint256 timestamp
+        uint256 timestamp,
+        uint256 cryptoAmount // Including cryptoAmount in the event
     );
     
     constructor() {
@@ -40,7 +42,8 @@ contract FXOptionPremiumStorage {
         uint256 domesticRate,
         uint256 foreignRate,
         uint256 volatility,
-        uint256 premium
+        uint256 premium,
+        uint256 cryptoAmount // Added parameter for cryptoAmount
     ) public {
         OptionPremium memory newPremium = OptionPremium({
             user: msg.sender,
@@ -51,7 +54,8 @@ contract FXOptionPremiumStorage {
             foreignRate: foreignRate,
             volatility: volatility,
             premium: premium,
-            timestamp: block.timestamp
+            timestamp: block.timestamp,
+            cryptoAmount: cryptoAmount // Store the cryptoAmount
         });
         
         optionPremiums[msg.sender].push(newPremium);
@@ -65,7 +69,8 @@ contract FXOptionPremiumStorage {
             foreignRate,
             volatility,
             premium,
-            block.timestamp
+            block.timestamp,
+            cryptoAmount // Emit cryptoAmount in the event
         );
     }
     

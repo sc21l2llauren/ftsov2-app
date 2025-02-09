@@ -99,19 +99,21 @@ def calculate_premium():
         rf = float(data["rf"])
         sigma = float(data["sigma"])
         option_type = data.get("option_type", "call")  # Default to "call"
+        amountOfCrypto = float(data["amountCrypto"])
 
         # Calculate the option premium
         premium = calculate_option_premium(S0, K, T, rd, rf, sigma, option_type)
-        print('premium is ', premium)
+        totalPremium = premium * amountOfCrypto
+        print('premium is ', premium, 'total premium is ', totalPremium)
         if premium is None:
             return jsonify({"error": "Failed to calculate option premium"}), 500
 
         # Store the premium on Flare blockchain
-        txn_hash = store_premium_on_blockchain(S0, K, T, rd, rf, sigma, premium)
+        txn_hash = store_premium_on_blockchain(S0, K, T, rd, rf, sigma, totalPremium)
         if txn_hash is None:
             return jsonify({"error": "Failed to store premium on blockchain"}), 500
 
-        return jsonify({"premium": premium, "transaction_hash": txn_hash}), 200
+        return jsonify({"premium": totalPremium, "transaction_hash": txn_hash}), 200
 
     except Exception as e:
         import traceback

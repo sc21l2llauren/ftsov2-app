@@ -10,7 +10,7 @@ load_dotenv()
 RPC_URL = os.getenv("RPC_URL")
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 #CONTRACT_ADDRESS = os.getenv("CONTRACT_ADDRESS")
-CONTRACT_ADDRESS = "0xf8Be4dcdB62F9546A370720939a2829B25DB1100"
+CONTRACT_ADDRESS = "0xf2Be7Cc2a95e929ceabfA9074B8a0EE0AA078f3c"
 # Initialize Web3
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 account = w3.eth.account.from_key(PRIVATE_KEY)

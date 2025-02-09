@@ -23,7 +23,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     
     const requestData = {
         S0: parseFloat(spotPrice),  // Ensure numerical values are correctly formatted
-        //amountCrypto: parseFloat(amountCrypto),
+        amountCrypto: parseFloat(amountCrypto),
         K: parseFloat(strikePrice),
         rd: parseFloat(domesticRiskFreeRate/100),
         rf: parseFloat(riskFreeRate/100),
