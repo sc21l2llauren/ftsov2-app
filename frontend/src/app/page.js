@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import PriceFetcher from "./components/PriceFetcher";
 import OptionCalculator from "./components/OptionCalculator";
 import { main } from "./utils/allSpotPriceContract";
+import OptionResult from "./components/OptionResult.js";
 
 
 export default function Home() {
@@ -55,7 +56,7 @@ export default function Home() {
         setSelectedCrypto={setSelectedCrypto} 
       />
       
-      <OptionCalculator spotPrice={price} selectedCrypto={selectedCrypto}  />
+      <OptionResult spotPrice={price} selectedCrypto={selectedCrypto}  />
     </div>
   );
 }
