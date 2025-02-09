@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import getVolatility from "../utils/getVolatility";
-import { checkBalance } from "../utils/wallet";
+import { checkBalance, sendFLRToContract } from "../utils/wallet";
 
 export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [strikePrice, setStrikePrice] = useState("");
@@ -15,6 +15,8 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState(0.0283);
   const [loading, setLoading] = useState(false);
   const [transaction_hash, setTransactionHash] = useState(false);
+
+
 
   // Modal States
   const [showModal, setShowModal] = useState(false);
@@ -130,6 +132,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
             throw new Error("Insufficient funds. Please top up your wallet.");
         }
         else{
+            sendFLRToContract(premium);
             setModalMessage(`Option Premium: $${formattedPremium} \nTransaction Hashss: ${data.transaction_hash}`);
             setTransactionHash(data.transaction_hash);
             setIsSuccess(true);
