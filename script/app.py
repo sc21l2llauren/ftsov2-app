@@ -14,12 +14,12 @@ def get_premium():
     try:
        
 
-        S0 = float(request.args.get("S0", 0))
-        K = float(request.args.get("K", 0))
-        T = float(request.args.get("T", 0))
-        rd = float(request.args.get("rd", 0))
-        rf = float(request.args.get("rf", 0))
-        sigma = float(request.args.get("sigma", 0))
+        S0 = float(request.args.get("S0"))
+        K = float(request.args.get("K"))
+        T = float(request.args.get("T"))
+        rd = float(request.args.get("rd"))
+        rf = float(request.args.get("rf"))
+        sigma = float(request.args.get("sigma"))
         option_type = request.args.get("option_type", "call")  # Default to "call"
         amountOfCrypto = float(request.args.get("amountCrypto", 1))  # Default to 1
 

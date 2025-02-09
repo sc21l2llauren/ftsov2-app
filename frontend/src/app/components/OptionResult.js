@@ -9,10 +9,10 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const [amountCrypto, setAmountCrypto] = useState("");
   const [optionType, setOptionType] = useState("call");
   const [volatility, setVolatility] = useState("");
-  const [riskFreeRate, setRiskFreeRate] = useState("");
+  const [riskFreeRate, setRiskFreeRate] = useState(0);
   const [daysUntilExpiration, setDaysUntilExpiration] = useState("");
   const [optionPremium, setOptionPremium] = useState(null);
-  const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState("");
+  const [domesticRiskFreeRate, setDomesticRiskFreeRate] = useState(0.0283);
   const [loading, setLoading] = useState(false);
   const [transaction_hash, setTransactionHash] = useState(false);
 
@@ -77,7 +77,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   }, [selectedCrypto]); // Trigger when selectedCrypto changes
 
   const handleCalculate = async () => {
-    if (!strikePrice || !volatility || !riskFreeRate || !daysUntilExpiration) {
+    if (!spotPrice || !strikePrice || !daysUntilExpiration || !volatility || !amountCrypto) {
       alert("Please fill in all fields.");
       return;
     }
@@ -142,7 +142,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
       console.error("Error calculating option price:", error);
 
       // Show failure modal with error message
-      setModalMessage(`Error: ${error.message || "Something went wrong. Please try again."}`);
+      setModalMessage(`${error.message || "Something went wrong. Please try again."}`);
       setIsSuccess(false);
       setShowModal(true);
     }
@@ -153,8 +153,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
   const getPremium = async () => {
 
     if (
-      !spotPrice || !strikePrice || !daysUntilExpiration || 
-      !domesticRiskFreeRate || !riskFreeRate || !volatility || !amountCrypto
+      !spotPrice || !strikePrice || !daysUntilExpiration || !volatility || !amountCrypto
     ) {
       console.warn("Missing or invalid input values. Skipping API call.");
       return;
@@ -202,7 +201,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     
     getPremium();
 
-  },[spotPrice, selectedCrypto, strikePrice, amountCrypto, optionType, volatility, riskFreeRate, daysUntilExpiration, domesticRiskFreeRate]);
+  },[spotPrice, selectedCrypto, strikePrice, amountCrypto, optionType, volatility, daysUntilExpiration]);
 
 
   return (
@@ -278,7 +277,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         />
         </div>
       </div>
-      
+
       {/* Premium */}
       <div className="flex flex-col">
         <label className="text-gray-600">Premium</label>
@@ -301,7 +300,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-xl text-center">
       {/* Success/Error Title */}
       <div className={`text-2xl font-bold mb-4 ${isSuccess ? "text-green-600" : "text-red-600"}`}>
-        {isSuccess ? "Success!" : "Error!"}
+        {isSuccess ? "Success!" : ""}
       </div>
 
       {/* Option Premium and Transaction Hash */}
@@ -311,9 +310,9 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
             Option Premium: <span className="text-blue-600">${optionPremium}</span>
           </div>
         ) : (
-          <div className="text-lg text-red-600">
-            {modalMessage}
-          </div>
+          <div className="text-lg font-semibold text-red-600 bg-red-100 border border-red-400 p-3 rounded-lg">
+      {modalMessage}
+    </div>
         )}
       </div>
 
