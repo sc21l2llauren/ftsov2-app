@@ -96,7 +96,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/calculate-premium", {
+      const response = await fetch("http://127.0.0.1:5000/publish-premium", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,6 +149,61 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
 
     setLoading(false);
   };
+  
+  const getPremium = async () => {
+
+    if (
+      !spotPrice || !strikePrice || !daysUntilExpiration || 
+      !domesticRiskFreeRate || !riskFreeRate || !volatility || !amountCrypto
+    ) {
+      console.warn("Missing or invalid input values. Skipping API call.");
+      return;
+    }
+
+    const requestData = {
+      S0: parseFloat(spotPrice),  // Ensure numerical values are correctly formatted
+      amountCrypto: parseFloat(amountCrypto),
+      K: parseFloat(strikePrice),
+      rd: parseFloat(domesticRiskFreeRate/100),
+      rf: parseFloat(riskFreeRate/100),
+      sigma: parseFloat(volatility/100),
+      T: parseFloat(daysUntilExpiration),
+      option_type: optionType || "Call" // Default to "call" if undefined
+    };
+
+    // Construct the query string from requestData
+    const queryString = new URLSearchParams(requestData).toString();
+
+    // Send a GET request with query parameters
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/get-premium?${queryString}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+
+      data = await response.json();
+      console.log(data, "data");
+
+      const premium = parseFloat(data.premium); // Ensure it's a number
+      console.log("Received json:", data);
+      setOptionPremium(premium);
+
+      if (isNaN(premium)) {
+        throw new Error("Invalid premium value received.");
+      }
+    } catch (error) {
+      console.error("Error calculating option price:", error);
+    }
+  };
+
+  useEffect(() => {
+    
+    getPremium();
+
+  },[spotPrice, selectedCrypto, strikePrice, amountCrypto, optionType, volatility, riskFreeRate, daysUntilExpiration, domesticRiskFreeRate]);
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl space-y-4 w-full max-w-md">
@@ -206,16 +261,9 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         {/* Volatility */}
         <div className="flex flex-col w-1/2">
           <label className="text-gray-600">Volatility (%)</label>
-          {/* <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
-          {spotPrice ? `${volatility}` : "Loading..."}
-        </p> */}
-        <input
-            type="number"
-            className="border border-gray-300 rounded-lg p-2 text-gray-500"
-            value={volatility}
-            onChange={(e) => setVolatility(e.target.value)}
-            min={0.01}
-          />
+          <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
+          {volatility ? `${volatility}` : "Loading..."}
+          </p>
         </div>
 
         {/* Risk-Free Rate */}
@@ -253,6 +301,14 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           onChange={(e) => setDaysUntilExpiration(e.target.value)}
           min={1}
         />
+      </div>
+
+      {/* Premium */}
+      <div className="flex flex-col">
+        <label className="text-gray-600">Premium</label>
+        <p className="border border-gray-300 bg-gray-100 rounded-lg p-2 text-lg text-blue-700">
+          {optionPremium ? `$${optionPremium}` : "..."}
+        </p>
       </div>
 
       {/* Calculate Button */}
