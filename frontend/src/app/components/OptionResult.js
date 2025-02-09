@@ -46,8 +46,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
     };
 
     try {
-
-        console.log("Request Data:", requestData); // Debugging output
+      console.log("Request Data:", requestData); // Debugging output
 
       const response = await fetch("http://127.0.0.1:5000/calculate-premium", {
         method: "POST",
@@ -59,17 +58,17 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
 
       const data = await response.json();
 
-    const premium = parseFloat(data.premium); // Ensure it's a number
-    console.log("Received json:", data);
-    if (isNaN(premium)) {
+      const premium = parseFloat(data.premium); // Ensure it's a number
+      console.log("Received json:", data);
+      if (isNaN(premium)) {
         throw new Error("Invalid premium value received.");
-    }
-    
-    // If rounding to 2 decimal places results in 0.00, use 20 decimal places
-    const formattedPremium = premium.toFixed(2) === "0.00" ? premium.toFixed(6) : premium.toFixed(2);
-    
-    console.log("Formatted Premium:", formattedPremium);
-    setOptionPremium(formattedPremium);
+      }
+      
+      // If rounding to 2 decimal places results in 0.00, use 20 decimal places
+      const formattedPremium = premium.toFixed(2) === "0.00" ? premium.toFixed(6) : premium.toFixed(2);
+      
+      console.log("Formatted Premium:", formattedPremium);
+      setOptionPremium(formattedPremium);
     } catch (error) {
       console.error("Error calculating option price:", error);
     }
@@ -97,19 +96,21 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           className="border border-gray-300 rounded-lg p-2 text-gray-500"
           value={strikePrice}
           onChange={(e) => setStrikePrice(e.target.value)}
+          min={0.000000000000000000000000000000000000001}
         />
       </div>
 
       {/* Number of (Crypto) */}
       <div className="flex flex-col">
-            <label className="text-gray-600">Number of ({selectedCrypto})</label>
-            <input
-                type="number"
-                className="border border-gray-300 rounded-lg p-2 text-gray-500"
-                value={amountCrypto}
-                onChange={(e) => setAmountCrypto(e.target.value)}
-            />
-        </div>
+        <label className="text-gray-600">Number of ({selectedCrypto})</label>
+        <input
+          type="number"
+          className="border border-gray-300 rounded-lg p-2 text-gray-500"
+          value={amountCrypto}
+          onChange={(e) => setAmountCrypto(e.target.value)}
+          min={0.000001}
+        />
+      </div>
 
       {/* Option Type */}
       <div className="flex flex-col">
@@ -124,38 +125,44 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
         </select>
       </div>
 
-      {/* Volatility */}
-      <div className="flex flex-col">
-        <label className="text-gray-600">Volatility (%)</label>
-        <input
-          type="number"
-          className="border border-gray-300 rounded-lg p-2 text-gray-500"
-          value={volatility}
-          onChange={(e) => setVolatility(e.target.value)}
-        />
-      </div>
-
-      {/* Risk-Free Rate */}
-      <div className="flex flex-col">
-        <label className="text-gray-600">Risk-Free Rate (%)</label>
-        <input
-          type="number"
-          className="border border-gray-300 rounded-lg p-2 text-gray-500"
-          value={riskFreeRate}
-          onChange={(e) => setRiskFreeRate(e.target.value)}
-        />
-      </div>
-
-        {/* Domestic Risk-Free Rate */}
-        <div className="flex flex-col">
-            <label className="text-gray-600">Domestic Risk-Free Rate (%)</label>
-            <input
-                type="number"
-                className="border border-gray-300 rounded-lg p-2 text-gray-500"
-                value={domesticRiskFreeRate}
-                onChange={(e) => setDomesticRiskFreeRate(e.target.value)}
-            />
+      {/* Volatility and Risk-Free Rate (Percentage Inputs in Same Row) */}
+      <div className="flex space-x-4">
+        {/* Volatility */}
+        <div className="flex flex-col w-1/2">
+          <label className="text-gray-600">Volatility (%)</label>
+          <input
+            type="number"
+            className="border border-gray-300 rounded-lg p-2 text-gray-500"
+            value={volatility}
+            onChange={(e) => setVolatility(e.target.value)}
+            min={0.01}
+          />
         </div>
+
+        {/* Risk-Free Rate */}
+        <div className="flex flex-col w-1/2">
+          <label className="text-gray-600">Risk-Free Rate (%)</label>
+          <input
+            type="number"
+            className="border border-gray-300 rounded-lg p-2 text-gray-500"
+            value={riskFreeRate}
+            onChange={(e) => setRiskFreeRate(e.target.value)}
+            min={0.01}
+          />
+        </div>
+      </div>
+
+      {/* Domestic Risk-Free Rate */}
+      <div className="flex flex-col">
+        <label className="text-gray-600">Domestic Risk-Free Rate (%)</label>
+        <input
+          type="number"
+          className="border border-gray-300 rounded-lg p-2 text-gray-500"
+          value={domesticRiskFreeRate}
+          onChange={(e) => setDomesticRiskFreeRate(e.target.value)}
+          min={0.01}
+        />
+      </div>
 
       {/* Days Until Expiration */}
       <div className="flex flex-col">
@@ -165,6 +172,7 @@ export default function OptionResult({ spotPrice, selectedCrypto }) {
           className="border border-gray-300 rounded-lg p-2 text-gray-500"
           value={daysUntilExpiration}
           onChange={(e) => setDaysUntilExpiration(e.target.value)}
+          min={1}
         />
       </div>
 
